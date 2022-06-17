@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "git-ripper"
+version = "0.1.0"
+description = "Downloads git repo(s) from the web"
+authors = ["tz4678 <tz4678@gmail.com>"]
+license = "MIT"
+repository = "https://github.com/tz4678/git-ripper"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+httpx = "^0.23.0"
+colorama = "^0.4.5"
+
+[tool.poetry.dev-dependencies]
+black = "^22.3.0"
+pytest = "^7.1.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+git-ripper = "git_ripper.cli:main"

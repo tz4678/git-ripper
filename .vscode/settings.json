@@ -1,0 +1,29 @@
+{
+  "[python]": {
+    "editor.tabSize": 4,
+    "editor.defaultFormatter": "ms-python.python",
+    "editor.codeActionsOnSave": {
+      "python.sortImports": true
+    }
+  },
+  "editor.formatOnSave": true,
+  "files.trimFinalNewlines": true,
+  "files.insertFinalNewline": true,
+  "python.formatting.provider": "black",
+  "python.formatting.blackArgs": [
+    "--line-length",
+    "80",
+    "--target-version",
+    "py310"
+  ],
+  "files.trimTrailingWhitespace": true,
+  "python.analysis.extraPaths": ["./git_ripper"],
+  "python.testing.pytestArgs": ["git_ripper"],
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestEnabled": true,
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/.pytest_cache": true,
+    "**/.venv": true
+  }
+}

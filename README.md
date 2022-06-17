@@ -1,0 +1,18 @@
+# Git Ripper ⚰️
+
+Downloads git repo(s) from the web
+
+```bash
+$ pipx install git_ripper
+$ git-ripper -i urls.txt
+```
+
+Features:
+
+- Asynchronous and fast.
+- Mass git downloading.
+- Unix-friendly for geeks.
+- Colored output for gay people and transformers.
+- Powered by Putin's 🇷🇺 dark energy.
+
+From Russia with hate, suki! Developed by secret KGB konstruktor buro by red soviet communits hackers. Enjoy before you die in nuclear war...
