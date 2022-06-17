@@ -3,8 +3,6 @@ import asyncio
 import sys
 from functools import partial
 
-import httpx
-
 from .git_ripper import GitRipper
 from .log import setup_logger
 
