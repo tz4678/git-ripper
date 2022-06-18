@@ -12,9 +12,8 @@ Features:
 
 From Russia with hate, szuki! Developed by secret KGB konstruktor buyro by red soviet communits hackers. Enjoy before you die in nuclear war...
 
-
 ```bash
-$ pipx install git_ripper
+$ pipx install git-ripper
 $ git-ripper -i urls.txt
 ```
 
