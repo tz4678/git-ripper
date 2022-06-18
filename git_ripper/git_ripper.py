@@ -14,11 +14,12 @@ from .log import get_logger
 from .utils.git import GitIndex
 
 
-class DownloadError(Exception):
-    pass
+# class Error(Exception):
+#     pass
 
 
 class GitRipper:
+    # TODO: добавить еще
     KNOWN_FILES = {
         "COMMIT_EDITMSG",
         # Содержит что-то типа:
@@ -28,6 +29,7 @@ class GitRipper:
         "description",
         "index",
         "objects/info/packs",
+        "packed-refs",
         "refs/heads/develop",
         # Ебаная повесточка
         "refs/heads/main",
@@ -63,16 +65,18 @@ class GitRipper:
             for i in range(self.num_workers)
         ]
 
-        # Ждем пока очередь очистится
+        # Ждем пока очередь станет пустой
         await url_queue.join()
 
         # Останавливаем выполнение заданий
         for _ in range(self.num_workers):
             url_queue.put_nowait(None)
 
-        # Ждем пока задания будут завершены
+        # Ждем пока задания завершатся
         for task in tasks:
             await task
+            
+        self.logger.info("run `git checkout -- .` to retrieve source code!")
 
     async def worker(self, n, url_queue: Queue) -> None:
         self.logger.debug("worker-%d stared", n)
@@ -131,9 +135,11 @@ class GitRipper:
                             )
                     elif filename == "objects/info/packs":
                         """
-                        P pack-c6df54b99207e470d30d09bfcb1fe48373bd6b99.pack
-                        P pack-06e39ff86c69ab1fae88701ffe4959870f301585.pack
-                        P pack-875d8c137bdb40f74b5d5074892e0e274423db7a.pack
+                        Парсим подобное содержимое:
+                        
+                          P pack-c6df54b99207e470d30d09bfcb1fe48373bd6b99.pack
+                          P pack-06e39ff86c69ab1fae88701ffe4959870f301585.pack
+                          P pack-875d8c137bdb40f74b5d5074892e0e274423db7a.pack
                         """
                         for pack_hash in re.findall(
                             r"pack\-[a-f\d]{40}", response.text
@@ -144,9 +150,10 @@ class GitRipper:
                             await url_queue.put(
                                 (git_url, f"objects/pack/{pack_hash}.pack")
                             )
+                    # TODO: извлекать хеши из файлов типа `packed-refs`
 
                 except Exception as ex:
-                    self.logger.warn(ex)
+                    self.logger.warn("An unexpected error has occurred: %s", ex)
                 finally:
                     url_queue.task_done()
 
@@ -162,6 +169,8 @@ class GitRipper:
         # https://example.org/foo/ -> https://example.org/foo/.git/
         if "://" not in url:
             url = f"http://{url}"
+        if not url.endswith("/"):
+            url += "/"
         return (
             url if url.endswith(".git/") else urllib.parse.urljoin(url, ".git/")
         )
