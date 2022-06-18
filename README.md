@@ -7,6 +7,8 @@ $ pipx install git_ripper
 $ git-ripper -i urls.txt
 ```
 
+![](./bandera-pidor.gif)
+
 Features:
 
 - Asynchronous and fast.
@@ -15,6 +17,4 @@ Features:
 - Colored output for gay people and transformers.
 - Powered by Putin's 🇷🇺 dark energy.
 
-From Russia with hate, suki! Developed by secret KGB konstruktor buro by red soviet communits hackers. Enjoy before you die in nuclear war...
-
-![](./bandera-pidor.gif)
+From Russia with hate, szuki! Developed by secret KGB konstruktor buyro by red soviet communits hackers. Enjoy before you die in nuclear war...
