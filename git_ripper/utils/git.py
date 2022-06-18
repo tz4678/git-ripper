@@ -31,7 +31,7 @@ class InvalidVersion(Error):
 class Header:
     signature: bytes
     version: int
-    entries_number: int
+    num_entries: int
 
 
 @dataclass
@@ -48,7 +48,7 @@ class Entry:
     file_size: int  # 40 bytes
     sha1: bytes  # +20 bytes
     flags: int  # +2 bytes
-    file_path: str  # null-terminated
+    file_path: bytes  # null-terminated
 
     @property
     def object_id(self) -> str:
@@ -78,7 +78,7 @@ class GitIndex:
 
     def parse_entries(self) -> None:
         self.entries = []
-        for _ in range(self.header.entries_number):
+        for _ in range(self.header.num_entries):
             entrysize = self._fp.tell()
             # В struct нету null-terminated strings
             unpacked = self.read_struct("!10I20sH")
@@ -86,10 +86,11 @@ class GitIndex:
             buf = io.BytesIO()
             while (c := self._fp.read(1)) and c != b"\0":
                 buf.write(c)
-            entry = Entry(*unpacked, file_path=buf.getvalue().encode())
+            entry = Entry(*unpacked, file_path=buf.getvalue())
             entrysize -= self._fp.tell()
             # размер entry кратен 8: file path добивается null-байтами
             self._fp.seek(entrysize % 8, 1)
+            # print(entry)
             self.entries.append(entry)
 
     def __iter__(self) -> t.Iterator[Entry]:

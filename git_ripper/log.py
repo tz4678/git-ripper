@@ -6,8 +6,8 @@ from colorama import Back, Fore, init
 class ColorFormatter(logging.Formatter):
     # Change this dictionary to suit your coloring needs!
     COLORS = {
-        "DEBUG": Fore.GREEN,
-        "INFO": Fore.BLUE,
+        "DEBUG": Fore.BLUE,
+        "INFO": Fore.GREEN,
         "WARNING": Fore.RED,
         "ERROR": Fore.RED + Back.WHITE,
         "CRITICAL": Fore.RED + Back.WHITE,
@@ -16,7 +16,7 @@ class ColorFormatter(logging.Formatter):
     def format(self, record):
         color = self.COLORS.get(record.levelname)
         if color:
-            record.name = color + record.name
+            # record.name = color + record.name
             record.levelname = color + record.levelname
             record.msg = color + record.msg
         return logging.Formatter.format(self, record)
@@ -25,9 +25,7 @@ class ColorFormatter(logging.Formatter):
 class ColorLogger(logging.Logger):
     def __init__(self, name):
         super().__init__(name, logging.WARNING)
-        color_formatter = ColorFormatter(
-            "%(name)-10s %(levelname)-18s %(message)s"
-        )
+        color_formatter = ColorFormatter("%(levelname)s - %(message)s")
         console = logging.StreamHandler()
         console.setFormatter(color_formatter)
         self.addHandler(console)

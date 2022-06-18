@@ -16,3 +16,5 @@ Features:
 - Powered by Putin's 🇷🇺 dark energy.
 
 From Russia with hate, suki! Developed by secret KGB konstruktor buro by red soviet communits hackers. Enjoy before you die in nuclear war...
+
+![](./bandera-pidor.gif)

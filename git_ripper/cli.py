@@ -14,20 +14,20 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         "--input",
         default=sys.stdin,
         type=argparse.FileType("r"),
-        help="input filename with urls",
+        help="input urls",
     )
     parser.add_argument(
         "-o",
         "--output",
         default="output",
-        help="output directory for save results",
+        help="output directory",
     )
     parser.add_argument(
         "-H",
         "--header",
         default=[],
         nargs="*",
-        help="additional header",
+        help="header",
     )
     parser.add_argument(
         "--workers",
@@ -38,7 +38,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     )
     parser.add_argument(
         "--timeout",
-        default=15.0,
+        default=5.0,
         help="client timeout",
         type=float,
     )
