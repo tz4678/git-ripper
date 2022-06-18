@@ -2,13 +2,6 @@
 
 Downloads git repo(s) from the web
 
-```bash
-$ pipx install git_ripper
-$ git-ripper -i urls.txt
-```
-
-![](./bandera-pidor.gif)
-
 Features:
 
 - Asynchronous and fast.
@@ -18,3 +11,11 @@ Features:
 - Powered by Putin's 🇷🇺 dark energy.
 
 From Russia with hate, szuki! Developed by secret KGB konstruktor buyro by red soviet communits hackers. Enjoy before you die in nuclear war...
+
+
+```bash
+$ pipx install git_ripper
+$ git-ripper -i urls.txt
+```
+
+![](./bandera-pidor.gif)
