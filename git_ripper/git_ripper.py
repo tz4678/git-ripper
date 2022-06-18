@@ -13,7 +13,6 @@ from .constants import USER_AGENT
 from .log import get_logger
 from .utils.git import GitIndex
 
-
 # class Error(Exception):
 #     pass
 
@@ -28,12 +27,23 @@ class GitRipper:
         "config",
         "description",
         "index",
+        "info/exclude",
+        "logs/HEAD",
+        "logs/refs/heads/develop",
+        "logs/refs/heads/main",
+        "logs/refs/heads/master",
+        "logs/refs/remotes/origin/develop",
+        "logs/refs/remotes/origin/main",
+        "logs/refs/remotes/origin/master",
         "objects/info/packs",
         "packed-refs",
         "refs/heads/develop",
         # Ебаная повесточка
         "refs/heads/main",
         "refs/heads/master",
+        "refs/remotes/origin/develop",
+        "refs/remotes/origin/main",
+        "refs/remotes/origin/master",
     }
 
     def __init__(
@@ -75,7 +85,7 @@ class GitRipper:
         # Ждем пока задания завершатся
         for task in tasks:
             await task
-            
+
         self.logger.info("run `git checkout -- .` to retrieve source code!")
 
     async def worker(self, n, url_queue: Queue) -> None:
@@ -136,7 +146,7 @@ class GitRipper:
                     elif filename == "objects/info/packs":
                         """
                         Парсим подобное содержимое:
-                        
+
                           P pack-c6df54b99207e470d30d09bfcb1fe48373bd6b99.pack
                           P pack-06e39ff86c69ab1fae88701ffe4959870f301585.pack
                           P pack-875d8c137bdb40f74b5d5074892e0e274423db7a.pack
