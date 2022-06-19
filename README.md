@@ -9,6 +9,7 @@ Features:
 - Unix-friendly for geeks.
 - Colored output for gay people and transformers.
 - Powered by Putin's 🇷🇺 dark energy.
+- Use Python programming language instead peaces of shit like Go or Rust. You can easily customize it!
 
 From Russia with hate, szuki! Developed by secret KGB konstruktor buyro by red soviet communits hackers. Enjoy before you die in nuclear war...
 
@@ -22,7 +23,7 @@ $ git-ripper 'https://svoboda.org.ua'
 # download git repos from file
 $ git-ripper -i urls.txt
 
-# pipng also works
+# piping also works
 $ command | git-ripper
 
 # see help
