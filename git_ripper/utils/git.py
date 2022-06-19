@@ -1,6 +1,6 @@
 import io
 import struct
-import typing as t
+import typing as typ
 from dataclasses import dataclass
 
 
@@ -13,7 +13,7 @@ class Error(Exception):
 
     @classmethod
     def raise_if_not(
-        cls, condition: bool, *args: t.Any, **kwargs: t.Any
+        cls, condition: bool, *args: typ.Any, **kwargs: typ.Any
     ) -> None:
         if not condition:
             raise cls(*args, **kwargs)
@@ -82,15 +82,15 @@ class GitIndex:
             buf = io.BytesIO()
             while (c := self._fp.read(1)) and c != b"\0":
                 buf.write(c)
-            entry = Entry(*unpacked, file_path=buf.getvalue())
+            entry = Entry(*unpacked, buf.getvalue())
             entrysize -= self._fp.tell()
             # размер entry кратен 8: file path добивается null-байтами
             self._fp.seek(entrysize % 8, 1)
             # print(entry)
             self.entries.append(entry)
 
-    def __iter__(self) -> t.Iterator[Entry]:
+    def __iter__(self) -> typ.Iterator[Entry]:
         return iter(self.entries)
 
-    def read_struct(self, format: str) -> tuple[t.Any, ...]:
+    def read_struct(self, format: str) -> tuple[typ.Any, ...]:
         return struct.unpack(format, self._fp.read(struct.calcsize(format)))
