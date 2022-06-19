@@ -13,19 +13,18 @@ class ColorFormatter(logging.Formatter):
         "CRITICAL": Fore.RED + Back.WHITE,
     }
 
-    def format(self, record):
-        color = self.COLORS.get(record.levelname)
-        if color:
-            # record.name = color + record.name
-            record.levelname = color + record.levelname
-            record.msg = color + record.msg
-        return logging.Formatter.format(self, record)
+    def format(self, record: logging.LogRecord) -> str:
+        output = super().format(record)
+        if color := self.COLORS.get(record.levelname):
+            output = color + output + Fore.RESET
+        return output
 
 
 class ColorLogger(logging.Logger):
-    def __init__(self, name):
+    def __init__(self, name: str) -> None:
         super().__init__(name, logging.WARNING)
-        color_formatter = ColorFormatter("%(levelname)s - %(message)s")
+        color_formatter = ColorFormatter("%(levelname)-10s: %(message)s")
+        # stream по дефолту sys.stderr
         console = logging.StreamHandler()
         console.setFormatter(color_formatter)
         self.addHandler(console)
@@ -35,7 +34,7 @@ def get_logger() -> logging.Logger:
     return logging.getLogger("git-ripper")
 
 
-def setup_logger(level: int | str) -> None:
+def init_logger(level: int | str) -> None:
     init(autoreset=True)
     logging.setLoggerClass(ColorLogger)
     get_logger().setLevel(level)

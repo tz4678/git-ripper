@@ -13,6 +13,7 @@
   "python.formatting.blackArgs": [
     "--line-length",
     "80",
+    "--skip-string-normalization",
     "--target-version",
     "py310"
   ],

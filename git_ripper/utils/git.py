@@ -50,10 +50,6 @@ class Entry:
     flags: int  # +2 bytes
     file_path: bytes  # null-terminated
 
-    @property
-    def object_id(self) -> str:
-        return self.sha1.hex()
-
 
 @dataclass
 class GitIndex:
