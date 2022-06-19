@@ -1,3 +1,5 @@
+![image](https://user-images.githubusercontent.com/12753171/174469279-fee0d9d5-7990-4237-8692-d7d5b7be86e5.png)
+
 # Git Ripper ⚰️
 
 Downloads git repo(s) from the web
@@ -31,3 +33,5 @@ $ git-ripper -h
 ```
 
 ![](./demo.gif)
+
+
