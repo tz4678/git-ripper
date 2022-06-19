@@ -5,7 +5,6 @@ import subprocess
 import typing
 import urllib.parse
 from asyncio import Queue
-from asyncio.log import logger
 from functools import cached_property
 from pathlib import Path
 
