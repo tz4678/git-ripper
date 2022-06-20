@@ -179,14 +179,19 @@ class GitRipper:
             'description',
             'info/exclude',
         ):
-            # Парсим packed-refs
             """
-            # pack-refs with: peeled fully-peeled
-            f30744354f9dd0966b728ea48576612c4354a64b refs/remotes/origin/1.8pre
-            247d824d35e81ec96e1a8913674c97fb45dd40ae refs/remotes/origin/master
-            bcc8a837055fe720579628d758b7034d6b520f2e refs/tags/1.0
-            bcc8a837055fe720579628d758b7034d6b520f2e refs/tags/1.0.1
-            ...
+            HEAD:
+
+                ref: refs/heads/master
+
+            packed-refs:
+
+                # pack-refs with: peeled fully-peeled
+                f30744354f9dd0966b728ea48576612c4354a64b refs/remotes/origin/1.8pre
+                247d824d35e81ec96e1a8913674c97fb45dd40ae refs/remotes/origin/master
+                bcc8a837055fe720579628d758b7034d6b520f2e refs/tags/1.0
+                bcc8a837055fe720579628d758b7034d6b520f2e refs/tags/1.0.1
+                ...
             """
             self.logger.debug("parse object hashes and refs: %s", downloaded)
             with downloaded.open() as f:
@@ -216,8 +221,6 @@ class GitRipper:
     def common_files(self) -> list[str]:
         rv = [
             "COMMIT_EDITMSG",
-            # Содержит что-то типа:
-            # ref: refs/heads/master
             "HEAD",
             "config",
             "description",

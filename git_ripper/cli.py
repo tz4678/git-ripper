@@ -84,20 +84,18 @@ def main() -> None:
     # setup_logger(level)
     setup_logger(level=['INFO', 'DEBUG'][args.verbose])
     urls = list(args.url)
-    if not sys.stdin.isatty():
-        urls.extend(map(str.strip, args.input))
-    if not urls:
-        urls = input("Enter URL(s): ").replace(',', ' ').split()
+    if not urls or not sys.stdin.isatty():
+        for line in map(str.strip, sys.stdin):
+            if not line:
+                break
+            urls.append(line)
     headers = map(partial(str.split, sep=":"), args.header)
-    try:
-        asyncio.run(
-            GitRipper(
-                download_directory=args.directory,
-                headers=headers,
-                num_workers=args.workers,
-                timeout=args.timeout,
-                user_agent=args.agent,
-            ).run(urls)
-        )
-    except KeyboardInterrupt:
-        sys.exit('\nbye')
+    asyncio.run(
+        GitRipper(
+            download_directory=args.directory,
+            headers=headers,
+            num_workers=args.workers,
+            timeout=args.timeout,
+            user_agent=args.agent,
+        ).run(urls)
+    )
