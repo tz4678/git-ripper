@@ -36,7 +36,6 @@ def get_logger() -> logging.Logger:
 def setup_logger(
     level: int | str,
 ) -> None:
-    global logger
     init(autoreset=True)
     logging.setLoggerClass(ColorLogger)
     get_logger().setLevel(level)

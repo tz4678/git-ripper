@@ -157,14 +157,14 @@ class GitRipper:
                         # 64kb хватит всем (c)
                         async for chunk in response.aiter_bytes(1 << 16):
                             f.write(chunk)
-                self.logger.info("file downloaded: %s", download_url)
+                self.logger.info("downloaded: %s", download_url)
             except:
                 if downloaded.exists():
                     downloaded.unlink()
                 self.logger.error("download failed: %s", download_url)
                 return
         else:
-            self.logger.debug('file exists: %s', downloaded)
+            self.logger.debug('file already exists: %s', downloaded)
 
         if filepath == 'config':
             self.logger.debug('parse config: %s', downloaded)
@@ -229,9 +229,10 @@ class GitRipper:
     def get_object_filepath(self, hash: str) -> str:
         return f'objects/{hash[:2]}/{hash[2:]}'
 
-    def normalize_git_url(self, u: str) -> str:
-        u = re.sub(r'^(?!https?://)', 'http://', u, re.I)
-        return urljoin(u, '.git/')
+    def normalize_git_url(self, s: str) -> str:
+        s = re.sub(r'^(?!https?://)', 'http://', s, re.I)
+        s = re.sub(r'(/\.git)?/?$', '/.git/', s)
+        return s
 
     @cached_property
     def common_files(self) -> list[str]:
