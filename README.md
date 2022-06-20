@@ -19,8 +19,7 @@ Features:
 # install
 $ pipx install git-ripper
 
-# download git repo from ukrainian neonazis website
-$ git-ripper https://svoboda.org.ua
+$ git-ripper https://example.org/path/to/repo/[ .git/ ]
 
 # so...
 $ git-ripper < urls.txt
@@ -29,6 +28,8 @@ $ command | git-ripper
 # see help
 $ git-ripper -h
 ```
+
+![image](https://user-images.githubusercontent.com/12753171/174517935-ca37dbd4-991f-4040-a26a-2d856477b2a0.png)
 
 ## FIXME
 

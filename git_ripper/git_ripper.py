@@ -140,7 +140,7 @@ class GitRipper:
 
         seen.add(download_url)
 
-        # "https://example.org/old%20site/.git/index" -> "output/example.org/old site/.git/index"
+        # "https://example.org/Old%20Site/.git/index" -> "output/example.org/Old Site/.git/index"
         downloaded = self.download_directory.joinpath(
             unquote(download_url.split('://')[1])
         )
