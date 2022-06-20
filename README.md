@@ -19,7 +19,7 @@ Features:
 # install
 $ pipx install git-ripper
 
-$ git-ripper https://example.org/path/to/repo/[ .git/ ]
+$ git-ripper https://example.org/repo/[ .git/ ]
 
 # so...
 $ git-ripper < urls.txt
@@ -29,7 +29,7 @@ $ command | git-ripper
 $ git-ripper -h
 ```
 
-![image](https://user-images.githubusercontent.com/12753171/174517935-ca37dbd4-991f-4040-a26a-2d856477b2a0.png)
+![image](https://user-images.githubusercontent.com/12753171/174526255-6c9d8834-8247-48ad-a263-c2255e292223.png)
 
 ## FIXME
 
