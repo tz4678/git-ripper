@@ -1,24 +1,22 @@
-"""Логгер, который срет в консоль всеми цветами радуги"""
 import logging
 
 from colorama import Back, Fore, init
 
 
 class ColorFormatter(logging.Formatter):
-    # Change this dictionary to suit your coloring needs!
     COLORS = {
-        "DEBUG": Fore.BLUE,
-        "INFO": Fore.GREEN,
-        "WARNING": Fore.MAGENTA,
-        "ERROR": Fore.RED,
-        "CRITICAL": Fore.RED + Back.WHITE,
+        'DEBUG': Fore.BLUE,
+        'INFO': Fore.GREEN,
+        'WARNING': Fore.MAGENTA,
+        'ERROR': Fore.RED,
+        'CRITICAL': Fore.RED,
     }
 
     def format(self, record: logging.LogRecord) -> str:
-        message = super().format(record)
+        output = super().format(record)
         if color := self.COLORS.get(record.levelname):
-            message = color + message + Fore.RESET
-        return message
+            output = color + output + Fore.RESET
+        return output
 
 
 class ColorLogger(logging.Logger):
@@ -38,6 +36,7 @@ def get_logger() -> logging.Logger:
 def setup_logger(
     level: int | str,
 ) -> None:
+    global logger
     init(autoreset=True)
     logging.setLoggerClass(ColorLogger)
     get_logger().setLevel(level)

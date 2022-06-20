@@ -32,4 +32,4 @@ $ git-ripper -h
 
 ## FIXME
 
-`^C` x 2 to stop execution.
+To stop the execution, you need to press `^C` several times.

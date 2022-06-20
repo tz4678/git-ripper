@@ -4,7 +4,6 @@ import re
 import subprocess
 import typing
 from asyncio import Queue
-from asyncio.log import logger
 from functools import cached_property
 from pathlib import Path
 from urllib.parse import urljoin, urlsplit
@@ -19,7 +18,12 @@ COMMON_BRANCH_NAMES = ['main', 'master', 'develop']
 DOWNLOAD_DIRECTORY = 'output'
 NUM_WORKERS = 50
 TIMEOUT = 15.0
-USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.115 Safari/537.36"
+USER_AGENT = (
+    "Mozilla/5.0 (X11; Linux x86_64)"
+    " AppleWebKit/537.36 (KHTML, like Gecko)"
+    " Chrome/102.0.5005.115"
+    " Safari/537.36"
+)
 
 
 class GitRipper:
@@ -33,6 +37,11 @@ class GitRipper:
         user_agent: str = USER_AGENT,
     ) -> None:
         self.download_directory = Path(download_directory)
+        if (
+            self.download_directory.exists()
+            and not self.download_directory.is_dir()
+        ):
+            raise ValueError("download directory wrong file type")
         self.num_workers = num_workers
         self.headers = headers
         self.timeout = timeout
@@ -139,7 +148,8 @@ class GitRipper:
                     response.raise_for_status()
                     downloaded.parent.mkdir(parents=True, exist_ok=True)
                     with downloaded.open('wb') as f:
-                        async for chunk in response.aiter_bytes(4096):
+                        # 64kb хватит всем (c)
+                        async for chunk in response.aiter_bytes(1 << 16):
                             f.write(chunk)
                 self.logger.info("file downloaded: %s", download_url)
             except:
@@ -156,7 +166,7 @@ class GitRipper:
                 contents = f.read()
                 for branch in re.findall(r'\[branch "([^"]+)"\]', contents):
                     self.logger.debug('found: %s', branch)
-                    for ref in self.get_branch_refs(branch):
+                    for ref in self.gen_branch_refs(branch):
                         await queue.put((base_url, ref))
         elif filepath == 'index':
             self.logger.debug('parse index: %s', downloaded)
@@ -232,21 +242,11 @@ class GitRipper:
         ]
 
         for branch in COMMON_BRANCH_NAMES:
-            rv += self.get_branch_refs(branch)
+            rv.extend(self.gen_branch_refs(branch))
 
         return rv
 
-    def get_branch_refs(self, branch: str) -> list[str]:
-        # refs/heads/main
-        # refs/remotes/origin/main
-        # logs/refs/heads/main
-        # logs/refs/remotes/origin/main
-        rv = []
+    def gen_branch_refs(self, branch: str) -> typing.Iterable[str]:
         for prefix in '', 'logs/':
-            rv.extend(
-                [
-                    f'{prefix}refs/heads/{branch}',
-                    f'{prefix}refs/remotes/origin/{branch}',
-                ]
-            )
-        return rv
+            yield f'{prefix}refs/heads/{branch}'
+            yield f'{prefix}refs/remotes/origin/{branch}'
