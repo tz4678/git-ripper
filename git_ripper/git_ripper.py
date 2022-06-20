@@ -6,7 +6,7 @@ import typing
 from asyncio import Queue
 from functools import cached_property
 from pathlib import Path
-from urllib.parse import urljoin, urlsplit
+from urllib.parse import unquote, urljoin
 
 import httpx
 from httpx._types import HeaderTypes
@@ -134,9 +134,9 @@ class GitRipper:
 
         seen.add(download_url)
 
-        url_parts = urlsplit(download_url)
+        # "https://example.org/old%20site/.git/index" -> "output/example.org/old site/.git/index"
         downloaded = self.download_directory.joinpath(
-            url_parts.netloc, url_parts.path[1:]
+            unquote(download_url.split('://')[1])
         )
 
         # self.logger.debug(downloaded)
