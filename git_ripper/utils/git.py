@@ -55,7 +55,7 @@ class Entry:
 class GitIndex:
     # https://git-scm.com/docs/index-format
     # TODO: add support of extenions
-    _fp: t.BinaryIO
+    _fp: typ.BinaryIO
 
     def parse(self) -> None:
         try:

@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "git-ripper"
-version = "0.1.2"
-description = "Downloads git repo(s) from the web"
+version = "0.1.3"
+description = "Downloads git repo(s) from the web."
 authors = ["tz4678 <tz4678@gmail.com>"]
 license = "MIT"
 repository = "https://github.com/tz4678/git-ripper"

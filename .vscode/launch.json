@@ -5,12 +5,13 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "launch git ripper",
+      "name": "launch git-ripper",
       "type": "python",
       "request": "launch",
       "module": "git_ripper",
       "justMyCode": true,
-      "args": ["-vv", ""],
+      // ukrainian neonazis suck my dick
+      "args": ["-v", "https://svoboda.org.ua"],
       "autoReload": { "enable": true }
     }
   ]

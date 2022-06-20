@@ -1,49 +1,60 @@
 import argparse
 import asyncio
-import logging
 import sys
 from functools import partial
 
-from .git_ripper import GitRipper
-from .log import init_logger
+from .git_ripper import (
+    DOWNLOAD_DIRECTORY,
+    NUM_WORKERS,
+    TIMEOUT,
+    USER_AGENT,
+    GitRipper,
+)
+from .utils.colorlog import setup_logger
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
-    parser.add_argument('url', nargs='*', help='urls')
-    parser.add_argument(
-        "-i",
-        "--input",
-        default="-",
-        type=argparse.FileType(),
-        help="input urls",
-    )
+    parser.add_argument('url', nargs='*', help="url must ends with /")
+    # parser.add_argument(
+    #     "-i",
+    #     "--input",
+    #     default="-",
+    #     type=argparse.FileType(),
+    #     help="input urls",
+    # )
     parser.add_argument(
         "-d",
         "--directory",
         "--dir",
-        default="output",
+        default=DOWNLOAD_DIRECTORY,
         help="download directory",
+    )
+    parser.add_argument(
+        "-A",
+        "--agent",
+        default=USER_AGENT,
+        help="client user-agent string",
     )
     parser.add_argument(
         "-H",
         "--header",
         default=[],
         nargs="*",
-        help="header",
+        help="additional client header",
     )
     parser.add_argument(
         "--workers",
         "-w",
-        default=10,
+        default=NUM_WORKERS,
         help="number of workers",
         type=int,
     )
     parser.add_argument(
         "--timeout",
-        default=5.0,
+        default=TIMEOUT,
         help="client timeout",
         type=float,
     )
@@ -70,16 +81,23 @@ def main() -> None:
     args = parse_args()
     # log_levels = ["WARNING", "INFO", "DEBUG"]
     # level = log_levels[min(args.verbose, len(log_levels) - 1)]
-    # init_logger(level)
-    init_logger(level=['INFO', 'DEBUG'][args.verbose])
+    # setup_logger(level)
+    setup_logger(level=['INFO', 'DEBUG'][args.verbose])
     urls = list(args.url)
-    if not args.input.isatty():
+    if not sys.stdin.isatty():
         urls.extend(map(str.strip, args.input))
+    if not urls:
+        urls = input("Enter URL(s): ").replace(',', ' ').split()
     headers = map(partial(str.split, sep=":"), args.header)
-    coro = GitRipper(
-        download_directory=args.directory,
-        num_workers=args.workers,
-        headers=headers,
-        timeout=args.timeout,
-    ).run(urls)
-    asyncio.run(coro)
+    try:
+        asyncio.run(
+            GitRipper(
+                download_directory=args.directory,
+                headers=headers,
+                num_workers=args.workers,
+                timeout=args.timeout,
+                user_agent=args.agent,
+            ).run(urls)
+        )
+    except KeyboardInterrupt:
+        sys.exit('\nbye')

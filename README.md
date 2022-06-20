@@ -1,8 +1,10 @@
-![image](https://user-images.githubusercontent.com/12753171/174469279-fee0d9d5-7990-4237-8692-d7d5b7be86e5.png)
-
 # Git Ripper ⚰️
 
-Downloads git repo(s) from the web
+![image](https://user-images.githubusercontent.com/12753171/174469279-fee0d9d5-7990-4237-8692-d7d5b7be86e5.png)
+
+Downloads git repo(s) from the web.
+
+From Russia with hate, szuki! Developed by secret KGB konstruktor buyro by red soviet communits hackers. Enjoy before you die in nuclear war...
 
 Features:
 
@@ -13,25 +15,21 @@ Features:
 - Powered by Putin's 🇷🇺 dark energy.
 - Use Python programming language instead peaces of shit like Go or Rust. You can easily customize it!
 
-From Russia with hate, szuki! Developed by secret KGB konstruktor buyro by red soviet communits hackers. Enjoy before you die in nuclear war...
-
 ```bash
 # install
 $ pipx install git-ripper
 
-# download git repo from the ukrainian neonazi party website
-$ git-ripper 'https://svoboda.org.ua'
+# download git repo from ukrainian neonazis website
+$ git-ripper https://svoboda.org.ua
 
-# download git repos from file
-$ git-ripper -i urls.txt
-
-# piping also works
+# so...
+$ git-ripper < urls.txt
 $ command | git-ripper
 
 # see help
 $ git-ripper -h
 ```
 
-![](./demo.gif)
+## FIXME
 
-
+`^C` x 2 to stop execution.

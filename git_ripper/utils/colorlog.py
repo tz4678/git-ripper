@@ -1,3 +1,4 @@
+"""Логгер, который срет в консоль всеми цветами радуги"""
 import logging
 
 from colorama import Back, Fore, init
@@ -8,22 +9,22 @@ class ColorFormatter(logging.Formatter):
     COLORS = {
         "DEBUG": Fore.BLUE,
         "INFO": Fore.GREEN,
-        "WARNING": Fore.RED,
-        "ERROR": Fore.RED + Back.WHITE,
+        "WARNING": Fore.MAGENTA,
+        "ERROR": Fore.RED,
         "CRITICAL": Fore.RED + Back.WHITE,
     }
 
     def format(self, record: logging.LogRecord) -> str:
-        output = super().format(record)
+        message = super().format(record)
         if color := self.COLORS.get(record.levelname):
-            output = color + output + Fore.RESET
-        return output
+            message = color + message + Fore.RESET
+        return message
 
 
 class ColorLogger(logging.Logger):
     def __init__(self, name: str) -> None:
         super().__init__(name, logging.WARNING)
-        color_formatter = ColorFormatter("%(levelname)-10s: %(message)s")
+        color_formatter = ColorFormatter("[%(levelname)s]: %(message)s")
         # stream по дефолту sys.stderr
         console = logging.StreamHandler()
         console.setFormatter(color_formatter)
@@ -34,7 +35,9 @@ def get_logger() -> logging.Logger:
     return logging.getLogger("git-ripper")
 
 
-def init_logger(level: int | str) -> None:
+def setup_logger(
+    level: int | str,
+) -> None:
     init(autoreset=True)
     logging.setLoggerClass(ColorLogger)
     get_logger().setLevel(level)
