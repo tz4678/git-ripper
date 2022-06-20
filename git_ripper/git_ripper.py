@@ -4,6 +4,7 @@ import re
 import subprocess
 import typing
 from asyncio import Queue
+from contextlib import asynccontextmanager
 from functools import cached_property
 from pathlib import Path
 from urllib.parse import unquote, urljoin
@@ -98,13 +99,18 @@ class GitRipper:
         # restore working directory
         os.chdir(cur_dir)
 
-    async def worker(self, queue: Queue, seen: set[str]) -> None:
+    @asynccontextmanager
+    async def get_client(self) -> typing.Iterable[httpx.AsyncClient]:
         async with httpx.AsyncClient(
             headers=self.headers,
             timeout=self.timeout,
             follow_redirects=False,
         ) as client:
             client.headers.setdefault("User-Agent", self.user_agent)
+            yield client
+
+    async def worker(self, queue: Queue, seen: set[str]) -> None:
+        async with self.get_client() as client:
             while True:
                 try:
                     url, filepath = await queue.get()
