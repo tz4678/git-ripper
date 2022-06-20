@@ -229,10 +229,10 @@ class GitRipper:
     def get_object_filepath(self, hash: str) -> str:
         return f'objects/{hash[:2]}/{hash[2:]}'
 
-    def normalize_git_url(self, s: str) -> str:
-        s = re.sub(r'^(?!https?://)', 'http://', s, re.I)
-        s = re.sub(r'(/\.git)?/?$', '/.git/', s)
-        return s
+    def normalize_git_url(self, url: str) -> str:
+        url = re.sub(r'^(?!https?://)', 'http://', url, re.I)
+        # без аргумента count неправильно работает
+        return re.sub(r'(/\.git)?/?$', '/.git/', url, 1)
 
     @cached_property
     def common_files(self) -> list[str]:
