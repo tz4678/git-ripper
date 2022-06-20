@@ -8,7 +8,7 @@ From Russia with hate, szuki! Developed by secret KGB konstruktor buyro by red s
 
 ![image](https://user-images.githubusercontent.com/12753171/174526255-6c9d8834-8247-48ad-a263-c2255e292223.png)
 
-Download git repo from ukrainian neonazi site.
+Downloading git repo from ukrainian neonazi site.
 
 Features:
 
