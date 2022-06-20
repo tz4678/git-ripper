@@ -10,7 +10,7 @@ from .git_ripper import (
     USER_AGENT,
     GitRipper,
 )
-from .utils.colorlog import setup_logger
+from .utils.colorlog import logger
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
@@ -81,8 +81,7 @@ def main() -> None:
     args = parse_args()
     # log_levels = ["WARNING", "INFO", "DEBUG"]
     # level = log_levels[min(args.verbose, len(log_levels) - 1)]
-    # setup_logger(level)
-    setup_logger(level=['INFO', 'DEBUG'][args.verbose])
+    logger.setLevel(level=['INFO', 'DEBUG'][args.verbose])
     headers = map(partial(str.split, sep=":"), args.header)
     urls = list(args.url)
     # Если список url пуст, то скрипт будет читать из stdin

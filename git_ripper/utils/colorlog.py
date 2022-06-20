@@ -1,5 +1,6 @@
 import logging
 
+# TODO: выбросить как лишнюю зависимость
 from colorama import Back, Fore, init
 
 
@@ -29,13 +30,6 @@ class ColorLogger(logging.Logger):
         self.addHandler(console)
 
 
-def get_logger() -> logging.Logger:
-    return logging.getLogger("git-ripper")
-
-
-def setup_logger(
-    level: int | str,
-) -> None:
-    init(autoreset=True)
-    logging.setLoggerClass(ColorLogger)
-    get_logger().setLevel(level)
+init(autoreset=True)
+logging.setLoggerClass(ColorLogger)
+logger = logging.getLogger('git-ripper')
