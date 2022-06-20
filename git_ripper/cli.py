@@ -83,13 +83,13 @@ def main() -> None:
     # level = log_levels[min(args.verbose, len(log_levels) - 1)]
     # setup_logger(level)
     setup_logger(level=['INFO', 'DEBUG'][args.verbose])
+    headers = map(partial(str.split, sep=":"), args.header)
     urls = list(args.url)
     if not urls or not sys.stdin.isatty():
         for line in map(str.strip, sys.stdin):
             if not line:
                 break
             urls.append(line)
-    headers = map(partial(str.split, sep=":"), args.header)
     asyncio.run(
         GitRipper(
             download_directory=args.directory,
