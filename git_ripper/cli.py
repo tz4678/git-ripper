@@ -85,8 +85,11 @@ def main() -> None:
     setup_logger(level=['INFO', 'DEBUG'][args.verbose])
     headers = map(partial(str.split, sep=":"), args.header)
     urls = list(args.url)
+    # Если список url пуст, то скрипт будет читать из stdin
     if not urls or not sys.stdin.isatty():
         for line in map(str.strip, sys.stdin):
+            # После того как будет встречена пустая строка, чтение из stdin будет прекращено.
+            # Это сделано для ручного ввода, что создпает проблему с чтением из файлов, содержащих пустые строки.
             if not line:
                 break
             urls.append(line)
