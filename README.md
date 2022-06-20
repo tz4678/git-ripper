@@ -6,6 +6,10 @@ Downloads git repo(s) from the web.
 
 From Russia with hate, szuki! Developed by secret KGB konstruktor buyro by red soviet communits hackers. Enjoy before you die in nuclear war...
 
+![image](https://user-images.githubusercontent.com/12753171/174526255-6c9d8834-8247-48ad-a263-c2255e292223.png)
+
+Download git repo from ukrainian neonazi site.
+
 Features:
 
 - Asynchronous and fast.
@@ -28,8 +32,6 @@ $ command | git-ripper
 # see help
 $ git-ripper -h
 ```
-
-![image](https://user-images.githubusercontent.com/12753171/174526255-6c9d8834-8247-48ad-a263-c2255e292223.png)
 
 ## FIXME
 
