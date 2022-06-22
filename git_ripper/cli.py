@@ -3,13 +3,8 @@ import asyncio
 import sys
 from functools import partial
 
-from .git_ripper import (
-    DOWNLOAD_DIRECTORY,
-    NUM_WORKERS,
-    TIMEOUT,
-    USER_AGENT,
-    GitRipper,
-)
+from .defaults import *
+from .git_ripper import GitRipper
 from .utils.colorlog import logger
 
 
@@ -26,11 +21,10 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     #     help="input urls",
     # )
     parser.add_argument(
-        "-d",
-        "--directory",
-        "--dir",
-        default=DOWNLOAD_DIRECTORY,
-        help="download directory",
+        "-o",
+        "--output",
+        default=OUTPUT_DIRECTORY,
+        help="output directory",
     )
     parser.add_argument(
         "-A",
@@ -94,7 +88,7 @@ def main() -> None:
             urls.append(line)
     asyncio.run(
         GitRipper(
-            download_directory=args.directory,
+            output_directory=args.output,
             headers=headers,
             num_workers=args.workers,
             timeout=args.timeout,

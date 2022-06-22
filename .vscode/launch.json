@@ -10,8 +10,7 @@
       "request": "launch",
       "module": "git_ripper",
       "justMyCode": true,
-      // ukrainian neonazis suck my dick
-      "args": ["-v", "https://svoboda.org.ua"],
+      "args": ["-v", "https://polsa.gov.pl"],
       "autoReload": { "enable": true }
     }
   ]

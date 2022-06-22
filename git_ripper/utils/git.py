@@ -1,19 +1,19 @@
 import io
 import struct
-import typing as typ
+import typing
 from dataclasses import dataclass
 
 
 class Error(Exception):
     message: str = None
 
-    def __init__(self, message: str = None) -> None:
+    def __init__(self, message: str | None = None) -> None:
         self.message = message or self.message
         super().__init__(self.message)
 
     @classmethod
     def raise_if_not(
-        cls, condition: bool, *args: typ.Any, **kwargs: typ.Any
+        cls, condition: bool, *args: typing.Any, **kwargs: typing.Any
     ) -> None:
         if not condition:
             raise cls(*args, **kwargs)
@@ -55,7 +55,7 @@ class Entry:
 class GitIndex:
     # https://git-scm.com/docs/index-format
     # TODO: add support of extenions
-    _fp: typ.BinaryIO
+    _fp: typing.BinaryIO
 
     def parse(self) -> None:
         try:
@@ -89,8 +89,8 @@ class GitIndex:
             # print(entry)
             self.entries.append(entry)
 
-    def __iter__(self) -> typ.Iterator[Entry]:
+    def __iter__(self) -> typing.Iterator[Entry]:
         return iter(self.entries)
 
-    def read_struct(self, format: str) -> tuple[typ.Any, ...]:
+    def read_struct(self, format: str) -> tuple[typing.Any, ...]:
         return struct.unpack(format, self._fp.read(struct.calcsize(format)))
