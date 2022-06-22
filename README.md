@@ -55,3 +55,5 @@ Git directory structure:
 ![image](https://www.apriorit.com/images/articles/git_remote_helper/git_directory_entities.jpg)
 
 - [Git Object Format](https://git-scm.com/book/en/v2/Git-Internals-Git-Objects)
+
+Сборка происходит автоматически при добавлении тега.

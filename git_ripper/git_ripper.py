@@ -102,7 +102,10 @@ class GitRipper:
                 logger.info("source retrieved: %s", path)
             except subprocess.CalledProcessError as ex:
                 # Command '['git', 'checkout', '--', '.']' returned non-zero exit status 1.
-                logger.error("can't retrieve source: %s", path)
+                logger.error(
+                    "can't retrieve source: %s (missing one or more files)",
+                    path,
+                )
 
         # restore working directory
         os.chdir(cur_dir)
