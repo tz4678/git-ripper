@@ -48,10 +48,6 @@ $ grep -A2 -B2 -n -i password /tmp/decoded
 
 To stop the execution, you need to press `^C` several times.
 
-## TODO
-
-- Заменить httpx на aiohttp.
-
 ## Notes
 
 Git directory structure:

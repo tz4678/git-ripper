@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "git-ripper"
-version = "0.1.9"
+version = "0.2.0"
 description = "Downloads git repos from the web."
 authors = ["tz4678 <tz4678@gmail.com>"]
 license = "MIT"
@@ -9,8 +9,10 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-httpx = "^0.23.0"
 colorama = "^0.4.5"
+aiohttp = "^3.8.1"
+aiodns = "^3.0.0"
+cchardet = "^2.1.7"
 
 [tool.poetry.dev-dependencies]
 black = "^22.3.0"
