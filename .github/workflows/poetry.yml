@@ -26,4 +26,7 @@ jobs:
         with:
           poetry-version: ${{ matrix.poetry-version }}
       - name: Build & Publish
-        run: poetry publish --build
+        run: |
+          echo "${POETRY_PYPI_TOKEN_PYPI}"
+          poetry config pypi-token.pypi "${POETRY_PYPI_TOKEN_PYPI}"
+          poetry publish --build
