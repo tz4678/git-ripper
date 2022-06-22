@@ -33,10 +33,6 @@ $ command | git-ripper
 $ git-ripper -h
 ```
 
-## FIXME
-
-To stop the execution, you need to press `^C` several times.
-
 ## How To Find Sensitive data
 
 ```bash
@@ -47,6 +43,14 @@ for i in output/target/.git/objects/*/*; do
 # find passwords
 $ grep -A2 -B2 -n -i password /tmp/decoded
 ```
+
+## FIXME
+
+To stop the execution, you need to press `^C` several times.
+
+## TODO
+
+- Заменить httpx на aiohttp.
 
 ## Notes
 
