@@ -1,5 +1,5 @@
-# https://github.com/tz4678/%project%/settings/environments/new -> poetry -> Add Secret
-# имя POETRY_PYPI_TOKEN_PYPI и секретный токен с pypi (см. ~/.pypirc)
+# Заходим в https://github.com/username/project/settings/secrets/actions/new
+# Создаем POETRY_PYPI_TOKEN_PYPI...
 name: Publish Project via Poetry
 
 on:
@@ -26,7 +26,4 @@ jobs:
         with:
           poetry-version: ${{ matrix.poetry-version }}
       - name: Build & Publish
-        # Этот грязный хак я откуда-то украл
-        run: |
-          poetry config pypi-token.pypi "${POETRY_PYPI_TOKEN_PYPI}"
-          poetry publish --build
+        run: poetry publish --build
