@@ -54,12 +54,16 @@ class GitRipper:
 
     async def run(self, urls: typing.Sequence[str]) -> None:
         queue = asyncio.Queue()
-
-        for url in urls:
-            url = self.normalize_git_url(url)
-            logger.debug("git url: %s", url)
-            for file in self.common_files:
-                await queue.put(urljoin(url, file))
+        normalized_urls = list(map(self.normalize_git_url, urls))
+        # target1/.git/HEAD
+        # target2/.git/HEAD
+        # ...
+        # target1/.git/index
+        for file in self.common_files:
+            for url in normalized_urls:
+                file_url = urljoin(url, file)
+                logger.debug("enqueue: %s", file_url)
+                queue.put_nowait(file_url)
 
         # Посещенные ссылки
         seen_urls = set()
@@ -140,6 +144,8 @@ class GitRipper:
                                 file_path.unlink()
                             logger.error("download failed: %s", file_url)
                             continue
+                    else:
+                        logger.debug("file exists: %s", file_path)
 
                     await self.parse_file(
                         file_path, self.get_git_baseurl(file_url), queue

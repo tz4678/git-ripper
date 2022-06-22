@@ -76,7 +76,7 @@ def main() -> None:
     # log_levels = ["WARNING", "INFO", "DEBUG"]
     # level = log_levels[min(args.verbose, len(log_levels) - 1)]
     logger.setLevel(level=['INFO', 'DEBUG'][args.verbose])
-    headers = map(partial(str.split, sep=":"), args.header)
+    headers = dict(map(partial(str.split, sep=":"), args.header))
     urls = list(args.url)
     # Если список url пуст, то скрипт будет читать из stdin
     if not urls or not sys.stdin.isatty():
