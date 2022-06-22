@@ -1,11 +1,11 @@
-# https://github.com/tz4678/git-ripper/settings/environments/new -> poetry -> Add Secret
+# https://github.com/tz4678/%project%/settings/environments/new -> poetry -> Add Secret
 # имя POETRY_PYPI_TOKEN_PYPI и секретный токен с pypi (см. ~/.pypirc)
 name: Publish Project via Poetry
 
 on:
   push:
     tags:
-      - v*.*.*
+      - '*'
 
 jobs:
   ci:
