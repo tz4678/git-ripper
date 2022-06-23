@@ -35,6 +35,7 @@ class GitRipper:
         timeout: float = TIMEOUT,
         headers: dict[str, str] | None = None,
         user_agent: str = USER_AGENT,
+        override_existing: bool = False,
         executor: Executor | None = None,
     ) -> None:
         self.output_directory = Path(output_directory)
@@ -47,6 +48,7 @@ class GitRipper:
         self.headers = headers
         self.timeout = timeout
         self.user_agent = user_agent
+        self.override_existing = override_existing
         self.executor = executor or ProcessPoolExecutor(
             max_workers=os.cpu_count()
         )
@@ -98,7 +100,7 @@ class GitRipper:
                         unquote(file_url.split('://')[1])
                     )
 
-                    if not file_path.exists():
+                    if self.override_existing or not file_path.exists():
                         try:
                             await self.download_file(
                                 session, file_url, file_path

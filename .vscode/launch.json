@@ -10,7 +10,7 @@
       "request": "launch",
       "module": "git_ripper",
       "justMyCode": true,
-      "args": ["-v", "https://polsa.gov.pl"],
+      "args": ["-f", "-v", "https://polsa.gov.pl"],
       "autoReload": { "enable": true }
     }
   ]

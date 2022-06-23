@@ -52,6 +52,12 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         help="client timeout",
         type=float,
     )
+    parser.add_argument(
+        "-f",
+        "--force",
+        action="store_true",
+        help="force override existing files",
+    )
     # parser.add_argument(
     #     "-v",
     #     "--verbose",
@@ -94,6 +100,7 @@ def main() -> None:
                 num_workers=args.workers,
                 timeout=args.timeout,
                 user_agent=args.agent,
+                override_existing=args.force,
             ).run(urls)
         )
     except Exception as ex:
