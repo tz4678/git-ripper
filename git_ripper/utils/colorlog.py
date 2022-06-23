@@ -1,23 +1,22 @@
 import logging
 
-# TODO: выбросить как лишнюю зависимость
-from colorama import Back, Fore, init
+from .termcolors import Back, Fore, Style
 
 
 class ColorFormatter(logging.Formatter):
     COLORS = {
         'DEBUG': Fore.BLUE,
         'INFO': Fore.GREEN,
-        'WARNING': Fore.MAGENTA,
+        'WARNING': Fore.YELLOW,
         'ERROR': Fore.RED,
-        'CRITICAL': Fore.RED,
+        'CRITICAL': Back.WHITE + Fore.RED,
     }
 
     def format(self, record: logging.LogRecord) -> str:
-        output = super().format(record)
         if color := self.COLORS.get(record.levelname):
-            output = color + output + Fore.RESET
-        return output
+            record.levelname = color + record.levelname + Style.RESET
+            record.msg = color + record.msg + Style.RESET
+        return super().format(record)
 
 
 class ColorLogger(logging.Logger):
@@ -30,6 +29,5 @@ class ColorLogger(logging.Logger):
         self.addHandler(console)
 
 
-init(autoreset=True)
 logging.setLoggerClass(ColorLogger)
 logger = logging.getLogger('git-ripper')

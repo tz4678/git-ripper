@@ -9,7 +9,6 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-colorama = "^0.4.5"
 aiohttp = "^3.8.1"
 aiodns = "^3.0.0"
 cchardet = "^2.1.7"

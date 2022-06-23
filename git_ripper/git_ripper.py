@@ -42,9 +42,7 @@ class GitRipper:
             self.output_directory.exists()
             and not self.output_directory.is_dir()
         ):
-            raise ValueError(
-                f"{str(self.output_directory)!r} is not directory!"
-            )
+            raise ValueError("invalid output directory!")
         self.num_workers = min(1, num_workers)
         self.headers = headers
         self.timeout = timeout
@@ -78,6 +76,7 @@ class GitRipper:
         # Останавливаем задания
         for w in workers:
             w.cancel()
+            await w
 
         # logger.info("run `git checkout -- .` to retrieve source code!")
         self.retrieve_souce_code()
