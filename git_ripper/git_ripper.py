@@ -14,7 +14,7 @@ from urllib.parse import unquote, urljoin
 import aiohttp
 
 from .defaults import *
-from .utils.colorlog import logger
+from .log import logger
 from .utils.git import GitIndex
 
 COMMON_BRANCH_NAMES = ['master', 'main', 'develop']
@@ -52,6 +52,7 @@ class GitRipper:
         )
 
     async def run(self, urls: typing.Sequence[str]) -> None:
+        # raise RuntimeError('foo')
         # Если размер очереди не будет ограничен, то в какой-то момент все запросы будут происходить к одному сайту
         queue = asyncio.Queue()
         normalized_urls = list(map(self.normalize_git_url, urls))
@@ -76,7 +77,6 @@ class GitRipper:
         # Останавливаем задания
         for w in workers:
             w.cancel()
-            await w
 
         # logger.info("run `git checkout -- .` to retrieve source code!")
         self.retrieve_souce_code()

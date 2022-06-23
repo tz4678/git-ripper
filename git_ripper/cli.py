@@ -5,7 +5,7 @@ from functools import partial
 
 from .defaults import *
 from .git_ripper import GitRipper
-from .utils.colorlog import logger
+from .log import logger
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
@@ -86,12 +86,15 @@ def main() -> None:
             if not line:
                 break
             urls.append(line)
-    asyncio.run(
-        GitRipper(
-            output_directory=args.output,
-            headers=headers,
-            num_workers=args.workers,
-            timeout=args.timeout,
-            user_agent=args.agent,
-        ).run(urls)
-    )
+    try:
+        asyncio.run(
+            GitRipper(
+                output_directory=args.output,
+                headers=headers,
+                num_workers=args.workers,
+                timeout=args.timeout,
+                user_agent=args.agent,
+            ).run(urls)
+        )
+    except Exception as ex:
+        logger.critical(ex)
