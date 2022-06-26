@@ -48,7 +48,7 @@ class Entry:
     file_size: int  # 40 bytes
     sha1: bytes  # +20 bytes
     flags: int  # +2 bytes
-    file_path: bytes  # null-terminated
+    filename: bytes  # null-terminated
 
 
 @dataclass

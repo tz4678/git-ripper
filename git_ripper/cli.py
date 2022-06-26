@@ -9,9 +9,7 @@ from .log import logger
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter
-    )
+    parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('url', nargs='*', help="repo url")
     # parser.add_argument(
     #     "-i",
@@ -85,7 +83,7 @@ def main() -> None:
     headers = dict(map(partial(str.split, sep=":"), args.header))
     urls = list(args.url)
     # Если список url пуст, то скрипт будет читать из stdin
-    if not urls or not sys.stdin.isatty():
+    if not urls:
         for line in map(str.strip, sys.stdin):
             # После того как будет встречена пустая строка, чтение из stdin будет прекращено.
             # Это сделано для ручного ввода, что создает проблему с чтением из файлов, содержащих пустые строки.

@@ -12,7 +12,7 @@
   "python.formatting.provider": "black",
   "python.formatting.blackArgs": [
     "--line-length",
-    "79",
+    "80",
     "--skip-string-normalization",
     "--target-version",
     "py310"

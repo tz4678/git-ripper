@@ -1,8 +1,9 @@
+__all__ = ('GitRipper',)
+
 import asyncio
 import cgi
 import os
 import re
-import subprocess
 import typing
 import zlib
 from concurrent.futures import Executor, ProcessPoolExecutor
@@ -46,11 +47,11 @@ class GitRipper:
             raise ValueError("invalid output directory!")
         self.num_workers = min(1, num_workers)
         self.headers = headers
-        self.timeout = timeout
+        self.timeout = aiohttp.ClientTimeout(timeout)
         self.user_agent = user_agent
         self.override_existing = override_existing
         self.executor = executor or ProcessPoolExecutor(
-            max_workers=os.cpu_count()
+            max_workers=max(os.cpu_count() * 2, 4)
         )
 
     async def run(self, urls: typing.Sequence[str]) -> None:
@@ -77,17 +78,23 @@ class GitRipper:
         await queue.join()
 
         # Останавливаем задания
+        for _ in range(self.num_workers):
+            await queue.put(None)
+
         for w in workers:
-            w.cancel()
+            await w
 
         # logger.info("run `git checkout -- .` to retrieve source code!")
-        self.retrieve_souce_code()
+        await self.retrieve_souce_code()
 
     async def worker(self, queue: asyncio.Queue, seen_urls: set[str]) -> None:
         async with self.get_session() as session:
             while True:
                 try:
                     file_url = await queue.get()
+
+                    if file_url is None:
+                        break
 
                     if file_url in seen_urls:
                         logger.debug("already seen %s", file_url)
@@ -105,8 +112,8 @@ class GitRipper:
                             await self.download_file(
                                 session, file_url, file_path
                             )
-                        except Exception as ex:
-                            logger.error("download failed: %s", file_url)
+                        except Exception as e:
+                            logger.error(e)
                             if file_path.exists():
                                 file_path.unlink()
                             continue
@@ -121,39 +128,34 @@ class GitRipper:
                 finally:
                     queue.task_done()
 
-    def retrieve_souce_code(self) -> None:
-        # save current working directory
-        cur_dir = Path.cwd()
-
+    async def retrieve_souce_code(self) -> None:
         for path in self.output_directory.glob('*/.git'):
             if not path.is_dir():
                 logger.warn("file is not directory: %s", path)
                 continue
-
-            os.chdir(path.parent)
-
             try:
-                subprocess.check_output(
-                    ['git', 'checkout', '--', '.'], shell=True, text=True
+                cmd = f"git --git-dir='{path}' --work-tree='{path.parent}' checkout -- ."
+                logger.debug("run: %r", cmd)
+                proc = await asyncio.create_subprocess_shell(
+                    cmd,
+                    stdout=asyncio.subprocess.PIPE,
+                    stderr=asyncio.subprocess.PIPE,
                 )
-                logger.info("source retrieved: %s", path)
-            except subprocess.CalledProcessError as ex:
-                # Command '['git', 'checkout', '--', '.']' returned non-zero exit status 1.
-                logger.error(
-                    "can't retrieve source: %s (missing one or more files)",
-                    path,
-                )
-
-        # restore working directory
-        os.chdir(cur_dir)
+                stdin, stderr = await proc.communicate()
+                if proc.returncode == 0:
+                    logger.info("source retrieved: %s", path)
+                else:
+                    logger.warning(stderr.decode())
+            except Exception as e:
+                logger.error(e)
 
     @asynccontextmanager
     async def get_session(self) -> typing.AsyncIterable[aiohttp.ClientSession]:
-        timeout = aiohttp.ClientTimeout(total=self.timeout)
+        connector = aiohttp.TCPConnector(verify_ssl=False)
         async with aiohttp.ClientSession(
-            headers=self.headers, timeout=timeout
+            connector=connector, headers=self.headers, timeout=self.timeout
         ) as session:
-            session.headers.setdefault("User-Agent", self.user_agent)
+            session.headers.setdefault('User-Agent', self.user_agent)
             yield session
 
     async def download_file(
@@ -191,10 +193,14 @@ class GitRipper:
             logger.debug("parse index: %s", file_path)
             with file_path.open('rb') as fp:
                 for entry in GitIndex(fp):
-                    obj = entry.sha1.hex()
-                    logger.debug("found: %s", obj)
+                    sha1_hex = entry.sha1.hex()
+                    logger.debug(
+                        "found: %s %s",
+                        sha1_hex,
+                        entry.filename.decode(errors='replace'),
+                    )
                     await queue.put(
-                        urljoin(git_url, self.get_object_path(obj))
+                        urljoin(git_url, self.get_object_path(sha1_hex))
                     )
         elif filename == 'objects/info/packs':
             logger.debug("parse packs: %s", file_path)

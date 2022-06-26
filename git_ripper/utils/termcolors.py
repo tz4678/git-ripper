@@ -1,16 +1,29 @@
-# Замена для colorama, но с метамагией
 # https://dev.to/ifenna__/adding-colors-to-bash-scripts-48g4
 # https://en.wikipedia.org/wiki/ANSI_escape_code
+import typing
+
+ColorMetaT = typing.TypeVar('ColorMetaT', bound='ColorMeta')
+
+
 class ColorMeta(type):
-    def __new__(mcls, name, bases, attrs):
-        newattrs = {}
-        for name, value in attrs.items():
-            newattrs[name] = f'\033[{value}m'
-        return super().__new__(mcls, name, bases, newattrs)
+    def __new__(
+        mcls: typing.Type[ColorMetaT],
+        name: str,
+        bases: tuple[type, ...],
+        attrs: dict[str, typing.Any],
+        **kwargs: typing.Any,
+    ) -> ColorMetaT:
+        return super().__new__(
+            mcls,
+            name,
+            bases,
+            {k: f'\033[{v}m' for k, v in attrs.items()},
+            **kwargs,
+        )
 
 
 class Color(metaclass=ColorMeta):
-    pass
+    RESET = 0
 
 
 class ForegroundColor(Color):
@@ -52,7 +65,6 @@ class BackgroundColor(Color):
 
 
 class StyleColor(Color):
-    RESET = 0
     BOLD = 1
     DIM = 2
     ITALIC = 3
