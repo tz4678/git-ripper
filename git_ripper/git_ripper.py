@@ -133,21 +133,18 @@ class GitRipper:
             if not path.is_dir():
                 logger.warn("file is not directory: %s", path)
                 continue
-            try:
-                cmd = f"git --git-dir='{path}' --work-tree='{path.parent}' checkout -- ."
-                logger.debug("run: %r", cmd)
-                proc = await asyncio.create_subprocess_shell(
-                    cmd,
-                    stdout=asyncio.subprocess.PIPE,
-                    stderr=asyncio.subprocess.PIPE,
-                )
-                stdin, stderr = await proc.communicate()
-                if proc.returncode == 0:
-                    logger.info("source retrieved: %s", path)
-                else:
-                    logger.warning(stderr.decode())
-            except Exception as e:
-                logger.error(e)
+            cmd = f"git --git-dir='{path}' --work-tree='{path.parent}' checkout -- ."
+            logger.debug("run: %r", cmd)
+            proc = await asyncio.create_subprocess_shell(
+                cmd,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE,
+            )
+            stdin, stderr = await proc.communicate()
+            if proc.returncode == 0:
+                logger.info("source retrieved: %s", path)
+            else:
+                logger.error(stderr.decode())
 
     @asynccontextmanager
     async def get_session(self) -> typing.AsyncIterable[aiohttp.ClientSession]:
