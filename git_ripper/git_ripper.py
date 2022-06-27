@@ -179,6 +179,7 @@ class GitRipper:
         queue: asyncio.Queue,
     ) -> None:
         _, filename = str(file_path).split('.git/')
+        # В конфиге в принципе нет ничего интересного. Его можно не парсить
         if filename == 'config':
             logger.debug("parse config: %s", file_path)
             contents = file_path.read_text()
@@ -207,6 +208,7 @@ class GitRipper:
                 logger.debug("found: %s", pack)
                 await queue.put(urljoin(git_url, f'objects/pack/{pack}.idx'))
                 await queue.put(urljoin(git_url, f'objects/pack/{pack}.pack'))
+        # TODO: парсить объекты ради удаленных из индекса объектов нет смысла
         elif OBJECT_FILENAME_RE.fullmatch(filename):
             logger.debug("parse object: %s", file_path)
             contents = file_path.read_bytes()
@@ -228,6 +230,7 @@ class GitRipper:
             for x in HASH_RE.findall(decoded_text):
                 logger.debug("found: %s", x)
                 await queue.put(urljoin(git_url, self.get_object_path(x)))
+        # Возможно, стоит только парсить packed-refs и HEAD, в котором что-то типа `ref: refs/heads/main`
         # elif filename == 'packed-refs':
         else:
             logger.debug("parse: %s", file_path)
