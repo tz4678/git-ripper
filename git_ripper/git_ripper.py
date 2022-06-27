@@ -113,7 +113,7 @@ class GitRipper:
                                 session, file_url, file_path
                             )
                         except Exception as e:
-                            logger.error(e)
+                            logger.error("download error: %s", e)
                             if file_path.exists():
                                 file_path.unlink()
                             continue
@@ -124,7 +124,7 @@ class GitRipper:
                         file_path, self.get_git_baseurl(file_url), queue
                     )
                 except Exception as ex:
-                    logger.error("An unexpected error has occurred: %s", ex)
+                    logger.error("an unexpected error has occurred: %s", ex)
                 finally:
                     queue.task_done()
 
@@ -162,9 +162,9 @@ class GitRipper:
         async with session.get(file_url) as response:
             response.raise_for_status()
             # TODO: есть теория, что сайтов, где `text/html` тип ответа по умолчанию море
-            ct, _ = cgi.parse_header(response.headers.get('content-type', ''))
-            if ct == 'text/html':
-                raise ValueError()
+            # ct, _ = cgi.parse_header(response.headers.get('content-type', ''))
+            # if ct == 'text/html':
+            #     raise ValueError(ct)
             contents = await response.read()
             file_path.parent.mkdir(parents=True, exist_ok=True)
             with file_path.open('wb') as fp:
@@ -216,16 +216,19 @@ class GitRipper:
                     self.executor, zlib.decompress, contents
                 )
             except zlib.error:
-                logger.error("delete invalid object: %s", file_path)
+                logger.error("can't decode object: %s", file_path)
                 file_path.unlink()
+                logger.debug("deleted: %s", file_path)
                 return
             if decoded[:4] == b'blob':
                 logger.debug("skip blob: %s", file_path)
                 return
             decoded_text = decoded.decode(errors='replace')
+            # Нужно ли искать
             for x in HASH_RE.findall(decoded_text):
                 logger.debug("found: %s", x)
                 await queue.put(urljoin(git_url, self.get_object_path(x)))
+        # elif filename == 'packed-refs':
         else:
             logger.debug("parse: %s", file_path)
             contents = file_path.read_text()
